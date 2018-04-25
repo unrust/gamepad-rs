@@ -16,9 +16,9 @@ mod platform;
 
 pub use self::platform::*;
 
-const MAX_DEVICES: usize = 8;
-const MAX_DIGITAL: usize = 16;
-const MAX_ANALOG: usize = 8;
+pub const MAX_DEVICES: usize = 8;
+pub const MAX_DIGITAL: usize = 16;
+pub const MAX_ANALOG: usize = 8;
 
 #[derive(Debug)]
 pub struct ControllerInfo {
@@ -45,7 +45,7 @@ lazy_static! {
     };
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ControllerStatus {
     Disconnected,
     Connected,
@@ -64,7 +64,7 @@ impl ControllerState {
         Self {
             status: ControllerStatus::Disconnected,
             sequence: 0,
-            digital_state[false;MAX_DIGITAL],
+            digital_state:[false;MAX_DIGITAL],
             analog_state:[0.0;MAX_ANALOG],
         }
     }
@@ -78,9 +78,9 @@ const DEFAULT_CONTROLLER_STATE: ControllerState = ControllerState {
 };
 
 pub trait ControllerContextInterface {
-    fn get_controller_count(&self) -> usize;
-    fn get_controller_info(&self, controller_num: usize) -> &ControllerInfo;
-    fn borrow_controller_state(&self, controller_num: usize) -> &ControllerState;
+    fn get_controller_count(&mut self) -> usize;
+    fn borrow_controller_info(&mut self, controller_num: usize) -> &ControllerInfo;
+    fn borrow_controller_state(&mut self, controller_num: usize) -> &ControllerState;
 }
 
 // struct ControllerContext implementing ControllerContextInterface must be defined in platform/
