@@ -9,14 +9,15 @@ pub fn main() {
     let mut controller = ControllerContext::new();
 
     loop {
-        println!("{} devices", controller.get_controller_count());
+        println!("{} devices", controller.scan_controllers());
         for i in 0..MAX_DEVICES {
-            let status = controller.borrow_controller_state(i).status;
+            controller.update(i);
+            let status = controller.state(i).status;
             if status == ControllerStatus::Connected {
                 let nb_buttons;
                 let nb_axis;
                 {
-                    let info = controller.borrow_controller_info(i);
+                    let info = controller.info(i);
                     nb_buttons = info.digital_count;
                     nb_axis = info.analog_count;
                     println!(
@@ -25,7 +26,7 @@ pub fn main() {
                     );
                 }
                 {
-                    let state = controller.borrow_controller_state(i);
+                    let state = controller.state(i);
                     print!("\tbuttons :\n\t  A  B  X  Y  Up Do Le Ri St Bk Lt Rt LB RB\n\t");
                     for i in 0..nb_buttons {
                         print!("  {}", if state.digital_state[i] { 1 } else { 0 });

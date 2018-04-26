@@ -5,8 +5,8 @@ use std::ffi::CStr;
 use std::os::raw::c_char;
 
 use self::udev::*;
-use super::super::{ControllerContextInterface, ControllerInfo, ControllerState,
-                   DEFAULT_CONTROLLER_INFO, DEFAULT_CONTROLLER_STATE, MAX_DEVICES};
+use super::super::{ControllerInfo, ControllerState, DEFAULT_CONTROLLER_INFO,
+                   DEFAULT_CONTROLLER_STATE, MAX_DEVICES};
 
 pub struct ControllerContext {
     udev: Option<Udev>,
@@ -14,8 +14,21 @@ pub struct ControllerContext {
     state: Vec<ControllerState>,
 }
 
-impl ControllerContextInterface for ControllerContext {
-    fn get_controller_count(&self) -> usize {
+impl ControllerContext {
+    pub fn new() -> Self {
+        let mut info = Vec::new();
+        let mut state = Vec::new();
+        for _ in 0..MAX_DEVICES {
+            info.push(ControllerInfo::new());
+            state.push(ControllerState::new());
+        }
+        Self {
+            udev: Udev::new(),
+            info,
+            state,
+        }
+    }
+    pub fn scan_controllers(&self) -> usize {
         if let Some(ref udev) = self.udev {
             if let Some(ref en) = udev.enumerate() {
                 unsafe {
@@ -47,27 +60,15 @@ impl ControllerContextInterface for ControllerContext {
         }
         0
     }
-    fn get_controller_info(&self, controller_num: usize) -> &ControllerInfo {
+    /// Update controller state by index
+    pub fn update(&mut self, _index: usize) {}
+    /// Get current information of Controller
+    pub fn info(&mut self, _index: usize) -> &ControllerInfo {
         &*DEFAULT_CONTROLLER_INFO
     }
-    fn borrow_controller_state(&self, controller_num: usize) -> &ControllerState {
+    /// Get current state of Controller
+    pub fn state(&mut self, _index: usize) -> &ControllerState {
         &DEFAULT_CONTROLLER_STATE
-    }
-}
-
-impl ControllerContext {
-    pub fn new() -> Self {
-        let mut info = Vec::new();
-        let mut state = Vec::new();
-        for _ in 0..MAX_DEVICES {
-            info.push(ControllerInfo::new());
-            state.push(ControllerState::new());
-        }
-        Self {
-            udev: Udev::new(),
-            info,
-            state,
-        }
     }
 }
 

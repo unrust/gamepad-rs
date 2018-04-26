@@ -76,11 +76,3 @@ const DEFAULT_CONTROLLER_STATE: ControllerState = ControllerState {
     digital_state: [false; MAX_DIGITAL],
     analog_state: [0.0; MAX_ANALOG],
 };
-
-pub trait ControllerContextInterface {
-    fn get_controller_count(&mut self) -> usize;
-    fn borrow_controller_info(&mut self, controller_num: usize) -> &ControllerInfo;
-    fn borrow_controller_state(&mut self, controller_num: usize) -> &ControllerState;
-}
-
-// struct ControllerContext implementing ControllerContextInterface must be defined in platform/
