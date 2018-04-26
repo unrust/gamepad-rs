@@ -1,19 +1,16 @@
 use std::mem;
 
-use winapi::shared::winerror::{ERROR_DEVICE_NOT_CONNECTED, ERROR_SUCCESS};
-use winapi::um::xinput::{self, XINPUT_BATTERY_INFORMATION as XBatteryInfo,
-                         XINPUT_CAPABILITIES as XCapabilities, XINPUT_GAMEPAD as XGamepad,
-                         XINPUT_STATE as XState, XINPUT_FLAG_GAMEPAD, XINPUT_GAMEPAD_A,
-                         XINPUT_GAMEPAD_B, XINPUT_GAMEPAD_BACK, XINPUT_GAMEPAD_DPAD_DOWN,
-                         XINPUT_GAMEPAD_DPAD_LEFT, XINPUT_GAMEPAD_DPAD_RIGHT,
-                         XINPUT_GAMEPAD_DPAD_UP, XINPUT_GAMEPAD_LEFT_SHOULDER,
-                         XINPUT_GAMEPAD_LEFT_THUMB, XINPUT_GAMEPAD_RIGHT_SHOULDER,
-                         XINPUT_GAMEPAD_RIGHT_THUMB, XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_X,
-                         XINPUT_GAMEPAD_Y};
+use winapi::shared::winerror::ERROR_SUCCESS;
+use winapi::um::xinput::{self, XINPUT_CAPABILITIES as XCapabilities, XINPUT_STATE as XState,
+                         XINPUT_FLAG_GAMEPAD, XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B,
+                         XINPUT_GAMEPAD_BACK, XINPUT_GAMEPAD_DPAD_DOWN, XINPUT_GAMEPAD_DPAD_LEFT,
+                         XINPUT_GAMEPAD_DPAD_RIGHT, XINPUT_GAMEPAD_DPAD_UP,
+                         XINPUT_GAMEPAD_LEFT_SHOULDER, XINPUT_GAMEPAD_LEFT_THUMB,
+                         XINPUT_GAMEPAD_RIGHT_SHOULDER, XINPUT_GAMEPAD_RIGHT_THUMB,
+                         XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y};
 
 use super::super::{ControllerContextInterface, ControllerInfo, ControllerState, ControllerStatus,
-                   DEFAULT_CONTROLLER_INFO, DEFAULT_CONTROLLER_STATE, MAX_ANALOG, MAX_DEVICES,
-                   MAX_DIGITAL};
+                   DEFAULT_CONTROLLER_INFO, DEFAULT_CONTROLLER_STATE, MAX_DEVICES, MAX_DIGITAL};
 
 pub struct ControllerContext {
     info: Vec<ControllerInfo>,
@@ -107,16 +104,14 @@ impl ControllerContext {
     fn update_info(&mut self, id: usize, capabilities: &XCapabilities) {
         let mut name = String::from("XBOX360");
         match capabilities.SubType {
-            XINPUT_DEVSUBTYPE_GAMEPAD => name.push_str(" gamepad"),
-            XINPUT_DEVSUBTYPE_WHEEL => name.push_str(" wheel"),
-            XINPUT_DEVSUBTYPE_ARCADE_STICK => name.push_str(" arcade stick"),
-            XINPUT_DEVSUBTYPE_FLIGHT_STICK => name.push_str(" flight stick"),
-            XINPUT_DEVSUBTYPE_DANCE_PAD => name.push_str(" dance pad"),
-            XINPUT_DEVSUBTYPE_GUITAR => name.push_str(" guitar"),
-            XINPUT_DEVSUBTYPE_GUITAR_ALTERNATE => name.push_str(" guitar"),
-            XINPUT_DEVSUBTYPE_GUITAR_BASS => name.push_str(" bass guitar"),
-            XINPUT_DEVSUBTYPE_DRUM_KIT => name.push_str(" drum"),
-            XINPUT_DEVSUBTYPE_ARCADE_PAD => name.push_str(" arcade pad"),
+            xinput::XINPUT_DEVSUBTYPE_GAMEPAD => name.push_str(" gamepad"),
+            xinput::XINPUT_DEVSUBTYPE_WHEEL => name.push_str(" wheel"),
+            xinput::XINPUT_DEVSUBTYPE_ARCADE_STICK => name.push_str(" arcade stick"),
+            xinput::XINPUT_DEVSUBTYPE_FLIGHT_SICK => name.push_str(" flight stick"),
+            xinput::XINPUT_DEVSUBTYPE_DANCE_PAD => name.push_str(" dance pad"),
+            xinput::XINPUT_DEVSUBTYPE_GUITAR => name.push_str(" guitar"),
+            xinput::XINPUT_DEVSUBTYPE_DRUM_KIT => name.push_str(" drum"),
+            _ => (),
         };
         name.push_str(" controller");
         self.info[id].name = name;
