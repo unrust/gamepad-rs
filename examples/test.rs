@@ -8,6 +8,7 @@ use gamepad_rs::*;
 pub fn main() {
     let mut controller = ControllerContext::new();
 
+    //for _ in 0..10 {
     loop {
         println!("{} devices", controller.scan_controllers());
         for i in 0..MAX_DEVICES {
@@ -42,6 +43,6 @@ pub fn main() {
                 }
             }
         }
-        thread::sleep(Duration::from_millis(1000));
+        thread::sleep(Duration::from_millis(100));
     }
 }

@@ -9,6 +9,13 @@ extern crate nix;
 #[cfg(target_os = "windows")]
 extern crate winapi;
 
+#[cfg(target_os = "macos")]
+extern crate IOKit_sys as io_kit;
+#[cfg(target_os = "macos")]
+extern crate core_foundation;
+#[cfg(target_os = "macos")]
+extern crate libc;
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -64,8 +71,8 @@ impl ControllerState {
         Self {
             status: ControllerStatus::Disconnected,
             sequence: 0,
-            digital_state:[false;MAX_DIGITAL],
-            analog_state:[0.0;MAX_ANALOG],
+            digital_state: [false; MAX_DIGITAL],
+            analog_state: [0.0; MAX_ANALOG],
         }
     }
 }
