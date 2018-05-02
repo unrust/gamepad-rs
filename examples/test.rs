@@ -6,7 +6,7 @@ use std::time::Duration;
 use gamepad_rs::*;
 
 pub fn main() {
-    let mut controller = ControllerContext::new();
+    let mut controller = ControllerContext::new().unwrap();
 
     //for _ in 0..10 {
     loop {

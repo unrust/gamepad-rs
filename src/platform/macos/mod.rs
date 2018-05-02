@@ -27,17 +27,22 @@ fn to_analog_state_array(state: &Vec<f32>) -> [f32; MAX_ANALOG] {
 }
 
 impl ControllerContext {
-    pub fn new() -> Self {
+    pub fn new() -> Option<Self> {
         let mut info = Vec::new();
         let mut state = Vec::new();
         for _ in 0..MAX_DEVICES {
             info.push(ControllerInfo::new());
             state.push(ControllerState::new());
         }
-        Self {
-            info,
-            state,
-            hid: hid::HID::new().expect("Fail to create hid"),
+
+        let hid = hid::HID::new();
+
+        match hid {
+            Ok(hid) => Some(Self { info, state, hid }),
+            Err(err) => {
+                println!("Error on create HID. reason: {:?}", err);
+                None
+            }
         }
     }
     pub fn scan_controllers(&mut self) -> usize {
@@ -60,8 +65,10 @@ impl ControllerContext {
                     analog_count: d.axes.len(),
                     digital_count: d.buttons.len(),
                 };
+                self.state[i].status = ControllerStatus::Connected;
             } else {
                 self.info[i] = ControllerInfo::new();
+                self.state[i].status = ControllerStatus::Disconnected;
             }
         }
 
@@ -70,26 +77,25 @@ impl ControllerContext {
     /// Update controller state by index
     pub fn update(&mut self, index: usize) {
         self.hid.update(index);
-
         let state = self.hid.hid_state();
         let devices = state.devices.borrow();
 
-        for (i, dev) in devices.iter().enumerate() {
-            if i >= MAX_DEVICES {
-                break;
-            }
+        if index >= devices.len() || index >= MAX_DEVICES {
+            return;
+        }
 
-            if let Some(d) = dev.upgrade() {
-                let dev_bor = d.borrow();
-                self.state[i] = ControllerState {
-                    status: ControllerStatus::Connected,
-                    sequence: dev_bor.state.sequence,
-                    analog_state: to_analog_state_array(&dev_bor.state.analog_state),
-                    digital_state: to_digital_state_array(&dev_bor.state.digital_state),
-                }
-            } else {
-                self.state[i].status = ControllerStatus::Disconnected;
+        let dev = &devices[index];
+
+        if let Some(d) = dev.upgrade() {
+            let dev_bor = d.borrow();
+            self.state[index] = ControllerState {
+                status: ControllerStatus::Connected,
+                sequence: dev_bor.state.sequence,
+                analog_state: to_analog_state_array(&dev_bor.state.analog_state),
+                digital_state: to_digital_state_array(&dev_bor.state.digital_state),
             }
+        } else {
+            self.state[index].status = ControllerStatus::Disconnected;
         }
     }
     /// Get current information of Controller

@@ -1,13 +1,14 @@
 use std::mem;
 
 use winapi::shared::winerror::ERROR_SUCCESS;
-use winapi::um::xinput::{self, XINPUT_CAPABILITIES as XCapabilities, XINPUT_STATE as XState,
-                         XINPUT_FLAG_GAMEPAD, XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B,
-                         XINPUT_GAMEPAD_BACK, XINPUT_GAMEPAD_DPAD_DOWN, XINPUT_GAMEPAD_DPAD_LEFT,
+use winapi::um::xinput::{self, XINPUT_CAPABILITIES as XCapabilities, XINPUT_FLAG_GAMEPAD,
+                         XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B, XINPUT_GAMEPAD_BACK,
+                         XINPUT_GAMEPAD_DPAD_DOWN, XINPUT_GAMEPAD_DPAD_LEFT,
                          XINPUT_GAMEPAD_DPAD_RIGHT, XINPUT_GAMEPAD_DPAD_UP,
                          XINPUT_GAMEPAD_LEFT_SHOULDER, XINPUT_GAMEPAD_LEFT_THUMB,
                          XINPUT_GAMEPAD_RIGHT_SHOULDER, XINPUT_GAMEPAD_RIGHT_THUMB,
-                         XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y};
+                         XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y,
+                         XINPUT_STATE as XState};
 
 use super::super::{ControllerInfo, ControllerState, ControllerStatus, DEFAULT_CONTROLLER_INFO,
                    DEFAULT_CONTROLLER_STATE, MAX_DEVICES, MAX_DIGITAL};
@@ -19,7 +20,7 @@ pub struct ControllerContext {
 }
 
 impl ControllerContext {
-    pub fn new() -> Self {
+    pub fn new() -> Option<Self> {
         let mut info = Vec::new();
         let mut state = Vec::new();
         let mut buttons = Vec::new();
