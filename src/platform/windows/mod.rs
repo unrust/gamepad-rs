@@ -1,14 +1,13 @@
 use std::mem;
 
 use winapi::shared::winerror::ERROR_SUCCESS;
-use winapi::um::xinput::{self, XINPUT_CAPABILITIES as XCapabilities, XINPUT_FLAG_GAMEPAD,
-                         XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B, XINPUT_GAMEPAD_BACK,
-                         XINPUT_GAMEPAD_DPAD_DOWN, XINPUT_GAMEPAD_DPAD_LEFT,
+use winapi::um::xinput::{self, XINPUT_CAPABILITIES as XCapabilities, XINPUT_STATE as XState,
+                         XINPUT_FLAG_GAMEPAD, XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B,
+                         XINPUT_GAMEPAD_BACK, XINPUT_GAMEPAD_DPAD_DOWN, XINPUT_GAMEPAD_DPAD_LEFT,
                          XINPUT_GAMEPAD_DPAD_RIGHT, XINPUT_GAMEPAD_DPAD_UP,
                          XINPUT_GAMEPAD_LEFT_SHOULDER, XINPUT_GAMEPAD_LEFT_THUMB,
                          XINPUT_GAMEPAD_RIGHT_SHOULDER, XINPUT_GAMEPAD_RIGHT_THUMB,
-                         XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y,
-                         XINPUT_STATE as XState};
+                         XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y};
 
 use super::super::{ControllerInfo, ControllerState, ControllerStatus, DEFAULT_CONTROLLER_INFO,
                    DEFAULT_CONTROLLER_STATE, MAX_DEVICES, MAX_DIGITAL};
@@ -30,11 +29,11 @@ impl ControllerContext {
             state.push(ControllerState::new());
             buttons.push([0; MAX_DIGITAL]);
         }
-        Self {
+        Some(Self {
             info,
             state,
             buttons,
-        }
+        })
     }
     /// Scan all device and return number of valid controllers
     pub fn scan_controllers(&mut self) -> usize {
