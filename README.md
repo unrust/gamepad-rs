@@ -7,8 +7,6 @@
 This library is a part of [Unrust](https://github.com/unrust/unrust), a pure rust native/wasm game engine.
 This library provides a windows, linux, MacOS native gamepad support in rust language.
 
-**This project is under heavily development, all api are very unstable until version 0.2**
-
 ## Usage
 
 ```toml
@@ -68,10 +66,7 @@ pub fn main() {
 
 ## Build
 
-Compilation works with current stable Rust (1.28)
-
 ```
-rustup override set stable
 cargo run --example basic --release
 ```
 

@@ -1,11 +1,12 @@
 [package]
 name = "gamepad-rs"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["jice <jice.nospam@gmail.com>"]
 keywords = ["gamepad", "joystick", "input"]
+edition = "2021"
 
 [dependencies]
-lazy_static = "1.0"
+lazy_static = "1.4.0"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 libudev-sys = "0.1"
@@ -13,9 +14,9 @@ libc = "0.2"
 nix = "0.10.0"
 
 [target.'cfg(target_os = "windows")'.dependencies]
-winapi = { version = "0.3.4", features = ["winerror", "xinput"] }
+winapi = { version = "0.3.9", features = ["winerror", "xinput"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 core-foundation = "0.5.1"
-IOKit-sys = {git="https://github.com/edwin0cheng/iokit-sys.git"}
+IOKit-sys = { git = "https://github.com/edwin0cheng/iokit-sys.git" }
 libc = "0.2"
