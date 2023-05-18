@@ -5,7 +5,7 @@ use std::ffi::CStr;
 use std::os::raw::c_char;
 
 use self::udev::*;
-use super::super::{ControllerInfo, ControllerState, DEFAULT_CONTROLLER_INFO,
+use crate::{ControllerInfo, ControllerState, ControllerStatus, DEFAULT_CONTROLLER_INFO,
                    DEFAULT_CONTROLLER_STATE, MAX_DEVICES};
 
 pub struct ControllerContext {
@@ -46,14 +46,14 @@ impl ControllerContext {
                                 continue;
                             }
                         }
-                        if let Some(gamepad) = Gamepad::open(&dev) {
-                            gamepads
-                                .push(MainGamepad::from_inner_status(gamepad, Status::Connected));
-                            additional_events.push_back(RawEvent::new(
-                                gamepads.len() - 1,
-                                RawEventType::Connected,
-                            ));
-                        }
+                        // if let Some(gamepad) = Gamepad::open(&dev) {
+                        //     gamepads
+                        //         .push(MainGamepad::from_inner_status(gamepad, ControllerStatus::Connected));
+                        //     additional_events.push_back(RawEvent::new(
+                        //         gamepads.len() - 1,
+                        //         RawEventType::Connected,
+                        //     ));
+                        // }
                     }
                 }
             }
